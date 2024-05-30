@@ -123,7 +123,6 @@ describe('Projet Trello Groupe 2', () => {
 
     // Do the drag'n'drop
     cy.get('@draggableElementCard2').drag('@dropTargetDone', {force:true});
-
   });
 
 });
