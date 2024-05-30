@@ -26,7 +26,7 @@
 
 describe('Projet Trello Groupe 2', () => {
   
-  before(()=> {
+  beforeEach(()=> {
     //Connexion
     cy.visit('https://trello.com/b/eqI3vDw6');
     cy.wait(1000);
@@ -41,12 +41,9 @@ describe('Projet Trello Groupe 2', () => {
     cy.wait(10000);
   });
 
-  it.skip('Création des cartes sur le tableau Trello', () => {
+  it('Création des cartes sur le tableau Trello', () => {
+
     cy.fixture("data").as("infos");
-    //Arriver sur tableau Trello
-    cy.url().should("include", "/boards");
-    cy.get("[href='/b/eqI3vDw6/projet-trello']").click();
-    cy.wait(5000);
 
     cy.get("@infos").then((info)=>{
       info.forEach((inf)=>{
@@ -98,7 +95,8 @@ describe('Projet Trello Groupe 2', () => {
 
   });
 
-  it.only('Drag n Drop des cartes', () => {
+  it('Drag n Drop des cartes', () => {
+    cy.wait(5000);
     // Grab "Elaborer un plan de test" card (draggable element)
     cy.get('[data-testid="card-name"]')
       .contains('Elaborer un plan de test')
@@ -123,6 +121,52 @@ describe('Projet Trello Groupe 2', () => {
 
     // Do the drag'n'drop
     cy.get('@draggableElementCard2').drag('@dropTargetDone', {force:true});
+
+    // Grab "Automatiser des tests de régression" card (draggable element)
+    cy.get('[data-testid="card-name"]')
+      .contains('Automatiser des tests de régression')
+      .parent().parent().parent()
+      .should('have.attr', 'draggable', 'true').as('draggableElementCardAutomatiser');
+
+    // Fetch "In Review" list (drop target)
+    cy.get('[data-testid="list"]')
+      .contains('In Review')
+      .parent().parent().parent()
+      .should('have.attr', 'data-drop-target-for-external', 'true').as('dropTargetInReview');
+
+    // Do the drag'n'drop
+    cy.get('@draggableElementCardAutomatiser').drag('@dropTargetInReview', {force:true});
+
+    // Grab "Exécuter des tests fonctionnels" card (draggable element)
+    cy.get('[data-testid="card-name"]')
+      .contains('Exécuter des tests fonctionnels')
+      .parent().parent().parent()
+      .should('have.attr', 'draggable', 'true').as('draggableElementCardFonctionnel');
+
+    // Fetch "In Progress" list (drop target)
+    cy.get('[data-testid="list"]')
+      .contains('In Progress')
+      .parent().parent().parent()
+      .should('have.attr', 'data-drop-target-for-external', 'true').as('dropTargetInProgress');
+
+    // Do the drag'n'drop
+    cy.get('@draggableElementCardFonctionnel').drag('@dropTargetInProgress', {force:true});
+
+    // Grab "Exécuter des tests de performance" card (draggable element)
+    cy.get('[data-testid="card-name"]')
+      .contains('Exécuter des tests de performance')
+      .parent().parent().parent()
+      .should('have.attr', 'draggable', 'true').as('draggableElementCardPerformance');
+
+    // Fetch "To Do" list (drop target)
+    cy.get('[data-testid="list"]')
+      .contains('To Do')
+      .parent().parent().parent()
+      .should('have.attr', 'data-drop-target-for-external', 'true').as('dropTargetToDo');
+
+    // Do the drag'n'drop
+    cy.get('@draggableElementCardPerformance').drag('@dropTargetToDo', {force:true});
+
   });
 
 });
