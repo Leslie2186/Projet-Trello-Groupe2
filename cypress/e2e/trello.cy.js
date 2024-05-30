@@ -103,17 +103,26 @@ describe('Projet Trello Groupe 2', () => {
     cy.get('[data-testid="card-name"]')
       .contains('Elaborer un plan de test')
       .parent().parent().parent()
-      .should('have.attr', 'draggable', 'true').as('draggableElement');
+      .should('have.attr', 'draggable', 'true').as('draggableElementCard1');
 
     // Fetch "Done" list (drop target)
     cy.get('[data-testid="list"]')
       .contains('Done')
       .parent().parent().parent()
-      .should('have.attr', 'data-drop-target-for-external', 'true').as('dropTarget');
+      .should('have.attr', 'data-drop-target-for-external', 'true').as('dropTargetDone');
 
     // Do the drag'n'drop
-    cy.get('@draggableElement').drag('@dropTarget', {force:true});
+    cy.get('@draggableElementCard1').drag('@dropTargetDone', {force:true});
 
+
+    // Grab "Concevoir les cas de test" card (draggable element)
+    cy.get('[data-testid="card-name"]')
+    .contains('Concevoir les cas de test')
+    .parent().parent().parent()
+    .should('have.attr', 'draggable', 'true').as('draggableElementCard2');
+
+    // Do the drag'n'drop
+    cy.get('@draggableElementCard2').drag('@dropTargetDone', {force:true});
   });
 
 });
