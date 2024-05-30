@@ -28,9 +28,9 @@ describe('Projet Trello Groupe 2', () => {
   
   before(()=> {
     //Connexion
-    cy.visit('https://trello.com/home');
+    cy.visit('https://trello.com/b/eqI3vDw6');
     cy.wait(1000);
-    cy.get("[data-uuid='MJFtCCgVhXrVl7v9HA7EH_login']").click();
+    cy.get('a').contains('Connexion').click();
     cy.wait(3000);
     cy.origin('https://id.atlassian.com/', () => {
         cy.get('[name="username"]').type('groupe2wcs@hotmail.com');
@@ -38,6 +38,7 @@ describe('Projet Trello Groupe 2', () => {
         cy.get("#password").type("Z12a456-");
         cy.get("#login-submit").click();
     });
+    cy.wait(10000);
   });
 
   it.skip('Création des cartes sur le tableau Trello', () => {
@@ -97,8 +98,22 @@ describe('Projet Trello Groupe 2', () => {
 
   });
 
-  it('', () => {
-    
+  it.only('Drag n Drop des cartes', () => {
+    // Grab "Elaborer un plan de test" card (draggable element)
+    cy.get('[data-testid="card-name"]')
+      .contains('Elaborer un plan de test')
+      .parent().parent().parent()
+      .should('have.attr', 'draggable', 'true').as('draggableElement');
+
+    // Fetch "Done" list (drop target)
+    cy.get('[data-testid="list"]')
+      .contains('Done')
+      .parent().parent().parent()
+      .should('have.attr', 'data-drop-target-for-external', 'true').as('dropTarget');
+
+    // Do the drag'n'drop
+    cy.get('@draggableElement').drag('@dropTarget', {force:true});
+
   });
 
 });
